@@ -8,34 +8,33 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { GithubIcon } from "lucide-react"
+import { 
+  signInWithGoogle, 
+  signInWithGitHub, 
+  signUpWithEmail, 
+  signInWithEmail 
+} from "@/lib/auth"
 
 export default function AuthPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const handleLogin = async (event) => {
     event.preventDefault()
     setIsLoading(true)
+    setError(null)
 
-    // Replace with your authentication logic
     const formData = new FormData(event.target)
     const email = formData.get("email")
     const password = formData.get("password")
 
     try {
-      // Example authentication call
-      // const response = await signIn('credentials', { email, password, redirect: false });
-      console.log("Login attempt with:", email, password)
-
-      // If successful, redirect to dashboard
-      // if (response.ok) router.push('/dashboard');
-
-      // For demo purposes, just redirect
-      setTimeout(() => {
-        router.push("/dashboard")
-      }, 1000)
+      await signInWithEmail(email, password)
+      router.push("/dashboard")
     } catch (error) {
       console.error("Login failed:", error)
+      setError(error.message)
     } finally {
       setIsLoading(false)
     }
@@ -44,6 +43,7 @@ export default function AuthPage() {
   const handleSignup = async (event) => {
     event.preventDefault()
     setIsLoading(true)
+    setError(null)
 
     const formData = new FormData(event.target)
     const email = formData.get("email")
@@ -51,22 +51,43 @@ export default function AuthPage() {
     const confirmPassword = formData.get("confirmPassword")
 
     if (password !== confirmPassword) {
-      alert("Passwords don't match")
+      setError("Passwords don't match")
       setIsLoading(false)
       return
     }
 
     try {
-      // Example signup call
-      // const response = await createUser({ email, password });
-      console.log("Signup attempt with:", email, password)
-
-      // For demo purposes, just redirect
-      setTimeout(() => {
-        router.push("/dashboard")
-      }, 1000)
+      await signUpWithEmail(email, password)
+      router.push("/dashboard")
     } catch (error) {
       console.error("Signup failed:", error)
+      setError(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true)
+      await signInWithGoogle()
+      router.push("/dashboard")
+    } catch (error) {
+      console.error("Google sign in failed:", error)
+      setError(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleGitHubSignIn = async () => {
+    try {
+      setIsLoading(true)
+      await signInWithGitHub()
+      router.push("/dashboard")
+    } catch (error) {
+      console.error("GitHub sign in failed:", error)
+      setError(error.message)
     } finally {
       setIsLoading(false)
     }
@@ -80,6 +101,12 @@ export default function AuthPage() {
             <TabsTrigger value="login">Login</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
+
+          {error && (
+            <div className="mb-4 p-4 bg-destructive/10 text-destructive rounded-md">
+              {error}
+            </div>
+          )}
 
           <TabsContent value="login">
             <Card>
@@ -114,7 +141,13 @@ export default function AuthPage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    <Button variant="outline" type="button" className="w-full">
+                    <Button 
+                      variant="outline" 
+                      type="button" 
+                      className="w-full"
+                      onClick={handleGoogleSignIn}
+                      disabled={isLoading}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         height="24"
@@ -141,7 +174,13 @@ export default function AuthPage() {
                       </svg>
                       Google
                     </Button>
-                    <Button variant="outline" type="button" className="w-full">
+                    <Button 
+                      variant="outline" 
+                      type="button" 
+                      className="w-full"
+                      onClick={handleGitHubSignIn}
+                      disabled={isLoading}
+                    >
                       <GithubIcon className="mr-2 h-4 w-4" />
                       Github
                     </Button>
@@ -202,7 +241,13 @@ export default function AuthPage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    <Button variant="outline" type="button" className="w-full">
+                    <Button 
+                      variant="outline" 
+                      type="button" 
+                      className="w-full"
+                      onClick={handleGoogleSignIn}
+                      disabled={isLoading}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         height="24"
@@ -229,7 +274,13 @@ export default function AuthPage() {
                       </svg>
                       Google
                     </Button>
-                    <Button variant="outline" type="button" className="w-full">
+                    <Button 
+                      variant="outline" 
+                      type="button" 
+                      className="w-full"
+                      onClick={handleGitHubSignIn}
+                      disabled={isLoading}
+                    >
                       <GithubIcon className="mr-2 h-4 w-4" />
                       Github
                     </Button>

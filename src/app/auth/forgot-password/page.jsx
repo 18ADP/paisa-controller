@@ -5,29 +5,27 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { resetPassword } from "@/lib/auth"
 
 export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [emailSent, setEmailSent] = useState(false)
+  const [error, setError] = useState(null)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     setIsLoading(true)
+    setError(null)
 
     const formData = new FormData(event.target)
     const email = formData.get("email")
 
     try {
-      // Replace with your password reset logic
-      // const response = await resetPassword(email);
-      console.log("Password reset requested for:", email)
-
-      // Simulate API call
-      setTimeout(() => {
-        setEmailSent(true)
-      }, 1000)
+      await resetPassword(email)
+      setEmailSent(true)
     } catch (error) {
       console.error("Password reset failed:", error)
+      setError(error.message)
     } finally {
       setIsLoading(false)
     }
@@ -43,6 +41,11 @@ export default function ForgotPasswordPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {error && (
+            <div className="mb-4 p-4 bg-destructive/10 text-destructive rounded-md">
+              {error}
+            </div>
+          )}
           {emailSent ? (
             <div className="space-y-4 text-center">
               <p>We've sent a password reset link to your email address.</p>
