@@ -4,12 +4,12 @@ import { getFirestore } from "firebase/firestore";
 
 // 🔹 Your Firebase Config (Get it from Firebase Console -> Project Settings)
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: "AIzaSyBvzsRQwdMGNiLUo5hEpGlrxO_5vIFG_tk",
+  authDomain: "paisa-controller-aea54.firebaseapp.com",
+  projectId: "paisa-controller-aea54",
+  storageBucket: "paisa-controller-aea54.firebasestorage.app",
+  messagingSenderId: "740550032099",
+  appId: "1:740550032099:web:dbcf53465a03b3831d23d6",
 };
 
 // Initialize Firebase
